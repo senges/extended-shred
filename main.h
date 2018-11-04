@@ -22,5 +22,4 @@
 #define OPT_FOLLOW_LINKS 1
 #define OPT_APPARENT_SIZE 0
 
-// #define TEST_PATH "/home/l3/senges/Public/TEST"
 #define TEST_PATH "/dev/null"
