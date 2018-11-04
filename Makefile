@@ -7,7 +7,7 @@ CFLAGS=-Wall -W -Werror
 LDFLAGS=
 
 # Output executable
-EXE=out
+EXE=main
 CFILES=$(wildcard *.c)
 OBJS=$(CFILES:.c=.o)
 
