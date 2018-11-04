@@ -1,5 +1,3 @@
-## Makefile un peu barbare mais efficace
-
 # Params
 CC=gcc
 LD=gcc
