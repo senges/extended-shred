@@ -31,6 +31,7 @@ void build_options()
     int size = v_flag + z_flag + u_flag + f_flag + 2;
 
     s_opt = malloc(sizeof(char) * size);
+
     s_opt[i++] = '-';
     
     if (v_flag) s_opt[i++] = 'v';
@@ -58,7 +59,7 @@ int is_number(const char *arg)
 /* Shred targeted file */
 int shred_me(const char *path)
 {
-    return execlp("shred", "shred", s_opt, path, NULL);
+    return (s_opt == NULL) ? execlp("shred", "shred", path, NULL) : execlp("shred", "shred", s_opt, path, NULL);
 }
 
 /* Browse files, recursivly if needed */
@@ -67,19 +68,19 @@ int browse(const char *pathname)
     int32_t code = 0;
     char path[PATH_MAX];
 
-    struct stat *st = NULL;
+    struct stat st;
     DIR *dir = NULL;
     struct dirent *cur_dir = NULL;
 
     /* Should we follow symbolic links ? */
-    code = (OPT_FOLLOW_LINKS) ? lstat(pathname, st) : stat(pathname, st);
+    code = (OPT_FOLLOW_LINKS) ? lstat(pathname, &st) : stat(pathname, &st);
 
     if (code)
         perror("lstat");
 
     assert(code != -1);
 
-    if (S_ISDIR(st->st_mode) && r_flag)
+    if (S_ISDIR(st.st_mode) && r_flag)
     {
 
         dir = opendir(pathname);
@@ -99,7 +100,7 @@ int browse(const char *pathname)
         closedir(dir);
     }
 
-    else if (S_ISREG(st->st_mode))
+    else if (S_ISREG(st.st_mode))
         shred_me(pathname);
 
     return 0;
@@ -145,7 +146,11 @@ int main(int argc, char **argv)
     assert(argc - optind > 0);
 
     printf("%s\n", argv[optind]);
-    //browse(argv[optind]);
+
+    if (r_flag || v_flag || z_flag || u_flag || f_flag)
+        build_options();
+
+    browse(argv[optind]);
 
     return 0;
 }
