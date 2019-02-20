@@ -45,8 +45,32 @@ case "$choice" in
 esac
 
 echo ""
-echo "[+] Shreding all directories"
+echo "[+] Removing toto1"
+
+./main -r -zuvf toto1
+
+test -e toto1
+TEST_1=$?
+
+test -e toto2
+TEST_2=$?
+
+./main -zuvf toto2/tata1
+
+test -e toto2/tata1
+TEST_3=$?
+
+test -e toto2/tata2
+TEST_4=$?
+
 ./main -r -zuvf toto*
 
-echo ""
-echo "[+] Done, plese check manually"
+test -e toto3
+TEST_5=$?
+
+if [ $TEST_1 -eq 1 ] && [ $TEST_2 -eq 0 ] && [ $TEST_3 -eq 1 ] && [ $TEST_4 -eq 0 ] && [ $TEST_5 -eq 1 ]
+then
+	echo "[+] Test coverage : 100%"
+else
+	echo "[-] Test coverage incomplete"
+fi
