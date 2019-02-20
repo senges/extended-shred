@@ -109,7 +109,8 @@ int browse(const char *pathname)
 int main(int argc, char **argv)
 {
 
-    assert(argc > 1);
+    if (argc <= 1)
+	usage();
 
     int opt;
     while ((opt = getopt(argc, argv, "rvzufmn:")) != -1)
